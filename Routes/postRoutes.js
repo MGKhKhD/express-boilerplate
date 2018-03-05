@@ -32,4 +32,8 @@ router.post("/:id/likes", authJWT, (req, res) =>
   postController.likedPost(req, res)
 );
 
+router.post("/:id/bookmarks", authJWT, (req, res) =>
+  postController.bookmarkPost(req, res)
+);
+
 module.exports = router;

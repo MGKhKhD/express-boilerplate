@@ -14,5 +14,5 @@ try {
 mongoose.connection
   .once("open", () => console.log("mongo db is running"))
   .on("error", error => {
-    throw new Error(err);
+    throw new Error(error);
   });

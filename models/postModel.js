@@ -30,6 +30,10 @@ const schema = new Schema(
     likeCounts: {
       type: Number,
       default: 0
+    },
+    bookmarkCounts: {
+      type: Number,
+      default: 0
     }
   },
   { timestamps: true }
@@ -56,6 +60,7 @@ schema.methods = {
       title: this.title,
       user: this.user,
       likeCounts: this.likeCounts,
+      bookmarkCounts: this.bookmarkCounts,
       slug: this.slug
     };
   }
@@ -77,6 +82,12 @@ schema.statics = {
   },
   decreaseLikeCounts: function decreaseLikeCounts(id) {
     return this.findByIdAndUpdate(id, { $inc: { likeCounts: -1 } });
+  },
+  increaseBookmarkCounts: function increaseBookmarkCounts(id) {
+    return this.findByIdAndUpdate(id, { $inc: { bookmarkCounts: 1 } });
+  },
+  decreaseBookmarkCounts: function decreaseBookmarkCounts(id) {
+    return this.findByIdAndUpdate(id, { $inc: { bookmarkCounts: -1 } });
   }
 };
 

@@ -21,8 +21,11 @@ async function getPostById(req, res) {
     const post = promise[1];
 
     const liked = promise[0].commitLikes.isPostLiked(req.params.postId);
+    const bookmarked = promise[0].commitBookmark.isPostBookmarked(post._id);
 
-    return res.status(httpStatus.OK).json({ ...post.toJSON(), liked });
+    return res
+      .status(httpStatus.OK)
+      .json({ ...post.toJSON(), liked, bookmarked });
   } catch (err) {
     return res.status(httpStatus.BAD_REQUEST).json(err);
   }
@@ -40,7 +43,8 @@ async function getAllPosts(req, res) {
 
     const posts = promise[1].reduce((arr, post) => {
       const liked = promise[0].commitLikes.isPostLiked(post._id);
-      arr.push({ ...post.toJSON(), liked });
+      const bookmarked = promise[0].commitBookmark.isPostBookmarked(post._id);
+      arr.push({ ...post.toJSON(), liked, bookmarked });
       return arr;
     }, []);
 
@@ -106,11 +110,26 @@ async function likedPost(req, res) {
   }
 }
 
+async function bookmarkPost(req, res) {
+  try {
+    const user = await findById(req.user._id);
+    if (!user) {
+      return res.send(httpStatus.BAD_REQUEST);
+    }
+
+    await user.commitBookmark.aPost(req.params.id);
+    return res.sendStatus(httpStatus.OK);
+  } catch (err) {
+    return res.status(httpStatus.BAD_REQUEST).json(err);
+  }
+}
+
 module.exports = {
   createPost,
   getPostById,
   getAllPosts,
   updatePost,
   deletePost,
-  likedPost
+  likedPost,
+  bookmarkPost
 };

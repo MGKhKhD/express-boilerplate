@@ -57,6 +57,14 @@ const schema = new Schema(
           ref: "Post"
         }
       ]
+    },
+    bookmarks: {
+      posts: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: "Post"
+        }
+      ]
     }
   },
   { timestamps: true }
@@ -116,6 +124,26 @@ schema.methods = {
     },
     isPostLiked: function isPostLiked(postId) {
       if (this.likes.posts.indexOf(postId) >= 0) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  },
+
+  commitBookmark: {
+    aPost: async function aPost(postId) {
+      if (this.bookmarks.posts.indexOf(postId) >= 0) {
+        this.bookmarks.posts.remove(postId);
+        await Post.decreaseBookmarkeCounts(postId);
+      } else {
+        this.bookmarks.posts.push(postId);
+        await Post.increaseBookmarkeCounts(postId);
+      }
+      return this.save();
+    },
+    isPostBookmarked: function isPostBookmarked(postId) {
+      if (this.bookmarks.posts.indexOf(postId) >= 0) {
         return true;
       } else {
         return false;
