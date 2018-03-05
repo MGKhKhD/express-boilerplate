@@ -132,13 +132,11 @@ schema.methods = {
   },
 
   commitBookmark: {
-    aPost: async function aPost(postId) {
+    aPost: function aPost(postId) {
       if (this.bookmarks.posts.indexOf(postId) >= 0) {
         this.bookmarks.posts.remove(postId);
-        await Post.decreaseBookmarkeCounts(postId);
       } else {
         this.bookmarks.posts.push(postId);
-        await Post.increaseBookmarkeCounts(postId);
       }
       return this.save();
     },

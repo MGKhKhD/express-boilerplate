@@ -112,13 +112,13 @@ async function likedPost(req, res) {
 
 async function bookmarkPost(req, res) {
   try {
-    const user = await findById(req.user._id);
+    const user = await User.findById(req.user._id);
     if (!user) {
       return res.send(httpStatus.BAD_REQUEST);
     }
 
     await user.commitBookmark.aPost(req.params.id);
-    return res.sendStatus(httpStatus.OK);
+    return res.sendStatus(httpStatus.OK).json(user);
   } catch (err) {
     return res.status(httpStatus.BAD_REQUEST).json(err);
   }
