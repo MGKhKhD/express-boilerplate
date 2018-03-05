@@ -58,14 +58,12 @@ const schema = new Schema(
         }
       ]
     },
-    bookmarks: {
-      posts: [
-        {
-          type: Schema.Types.ObjectId,
-          ref: "Post"
-        }
-      ]
-    }
+    bookmarks: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Post"
+      }
+    ]
   },
   { timestamps: true }
 );
@@ -133,15 +131,15 @@ schema.methods = {
 
   commitBookmark: {
     aPost: function aPost(postId) {
-      if (this.bookmarks.posts.indexOf(postId) >= 0) {
-        this.bookmarks.posts.remove(postId);
+      if (this.bookmarks.indexOf(postId) >= 0) {
+        this.bookmarks.remove(postId);
       } else {
-        this.bookmarks.posts.push(postId);
+        this.bookmarks.push(postId);
       }
       return this.save();
     },
     isPostBookmarked: function isPostBookmarked(postId) {
-      if (this.bookmarks.posts.indexOf(postId) >= 0) {
+      if (this.bookmarks.indexOf(postId) >= 0) {
         return true;
       } else {
         return false;
